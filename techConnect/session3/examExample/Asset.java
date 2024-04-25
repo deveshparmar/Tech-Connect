@@ -12,13 +12,13 @@ public class Asset {
 
     public Asset() {
         this.examInProgress = false;
-        this.mutex = new Semaphore(1); // initializing the lock
+        this.mutex = new Semaphore(1); // initializing the semaphore 
         this.examQuestions = new ArrayList<>();
     }
 
     public void createExam(List<Question> questions) {
         try {
-            mutex.acquire(); // Acquire the mutex
+            mutex.acquire(); // Acquire the mutex for creating question
             if (!examInProgress) {
                 examQuestions.addAll(questions);
             } else {
@@ -27,13 +27,13 @@ public class Asset {
         } catch (InterruptedException error) {
             error.printStackTrace();
         } finally {
-            mutex.release(); // Release the mutex
+            mutex.release(); // Release the mutex so other thread can access
         }
     }
 
     public void startExam() {
         try {
-            mutex.acquire(); // acquiring the lock at the starting of examination
+            mutex.acquire(); // acquiring the mutex at the starting of examination
             if (!examInProgress) {
                 examInProgress = true; // changing status of examination
                 System.out.println("ASSET exam started");
@@ -43,13 +43,13 @@ public class Asset {
         } catch (InterruptedException error) {
             error.printStackTrace();
         } finally {
-            mutex.release(); // relaesing the lock so that other threads can access
+            mutex.release(); // releasing the mutex so that other threads can access
         }
     }
 
     public void submitExam(String studentName, String examName){
         try{
-            mutex.acquire(); // acquiring the lock at the time of submitting the examination
+            mutex.acquire(); // acquiring the mutex at the time of submitting the examination
             if(examInProgress){
                 System.out.println(studentName + " is submitting the exam paper: " + examName);
                  
@@ -64,7 +64,7 @@ public class Asset {
         }catch(InterruptedException error){
             error.printStackTrace();
         } finally {
-           mutex.release(); // releasing the lock so others thread can access
+           mutex.release(); // releasing the mutex so others thread can access
         }
     }
 }

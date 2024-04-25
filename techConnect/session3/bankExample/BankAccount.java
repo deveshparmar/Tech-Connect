@@ -5,11 +5,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class BankAccount{
     private double balance;
-    private Lock lock; // Mutex
+    private Lock lock; // defining the mutex (lock)
 
     public BankAccount(double initialBankBalance){
         this.balance = initialBankBalance;
-        this.lock = new ReentrantLock();
+        this.lock = new ReentrantLock(); // initializing mutex with reentrant lock
     }
 
     public void depositMoney(double amount){
