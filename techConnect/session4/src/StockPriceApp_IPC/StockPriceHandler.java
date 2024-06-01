@@ -9,10 +9,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.DecimalFormat;
+import java.util.Random;
 
 public class StockPriceHandler implements Runnable{
     private Socket clientSocket;
     private boolean flag = true;
+    private static final Random random = new Random();
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+
     public StockPriceHandler(Socket socket) {
         this.clientSocket = socket;
     }
@@ -25,16 +31,17 @@ public class StockPriceHandler implements Runnable{
 
             // Simulated stock price updates (replace with actual data fetching logic)
             String[] stocks = {"GOOGLE", "TCS", "WIPRO", "AMAZON"};
-            double[] prices = {2345.67, 178.45, 321.98, 3456.21};
 
             while (flag){
-                // Send stock price updates to the client
-                for(int i=0;i<stocks.length;i++){
-                    String stockUpdate = stocks[i] + ":" + prices[i];
+                Runnable task = ()->{
+                    String stock = stocks[random.nextInt(stocks.length)];
+                    double price = 100 + (500-100)*random.nextDouble();
+                    String formattedPrice = decimalFormat.format(price);
+                    String stockUpdate = stock + ":" + formattedPrice;
                     out.println(stockUpdate);
                     System.out.println("Sent stock price update to client: "+stockUpdate);
-                }
-
+                };
+                task.run();
                 // Wait for a few seconds before sending the next update
                 Thread.sleep(5000);
             }
